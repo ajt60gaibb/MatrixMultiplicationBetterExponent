@@ -100,5 +100,4 @@ explicitly to `optimization/certify_p4_region_candidate.py`.
 
 ## Licensing
 
-No license has been selected in this bundle. Before making the repository public, choose the desired
-code and manuscript licenses (for example, BSD-3-Clause or MIT for code and CC BY 4.0 for the paper).
+MIT for code and CC BY 4.0 for the paper.
