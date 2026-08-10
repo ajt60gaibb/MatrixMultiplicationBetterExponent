@@ -1,0 +1,27 @@
+{
+  "stored_safe_omega": 2.3713099046652784,
+  "fresh_tightened_omega": 2.3713098963342496,
+  "dense_forward_omega": 2.371309896335721,
+  "dense_minus_fresh": 1.4712675522332574e-12,
+  "array_residuals": {
+    "level3": 8.326672684688674e-17,
+    "level2": 7.771561172376096e-16,
+    "global": 3.310296481373598e-12,
+    "mat": 7.105427357601002e-15
+  },
+  "maximum_array_residual": 3.310296481373598e-12,
+  "row_serialization_residual": 0.0,
+  "row_sum_residual": 2.220446049250313e-16,
+  "minimum_region_weight": 0.0,
+  "changed_parameter_count": 543,
+  "unexpected_changed_indices": [],
+  "max_inequality": -9.999999717180685e-10,
+  "max_equality": 3.3131830612376234e-11,
+  "max_bound": 0.0,
+  "record_margin_stored": 2.8995878139870257e-05,
+  "jacobian_max_error_all": 6.142203563594254e-10,
+  "jacobian_max_error_global": 5.0825187747703614e-11,
+  "jacobian_global_analytic_scale": 1.8219740188062392e-07,
+  "initial_epigraph_min_constraint": 9.999999439624929e-11,
+  "sha256": "65d78064ef3686f850558b3881446403afe9d4910d2d2e046c3dab92c390ff83"
+}

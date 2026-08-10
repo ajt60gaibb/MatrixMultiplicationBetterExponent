@@ -1,0 +1,73 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{VGO{\etalchar{+}}20}
+
+\bibitem[ADV{\etalchar{+}}24]{MoreAsymmetryCode}
+Josh Alman, Ran Duan, Virginia {Vassilevska Williams}, Yinzhan Xu, Zixuan Xu,
+  and Renfei Zhou.
+\newblock Optimisation and verification code for more asymmetry yields faster
+  matrix multiplication.
+\newblock Open Science Framework, 2024.
+\newblock
+  \url{https://osf.io/mw5ak/?view_only=5769f03789354793b61e11aac4dd85dd},
+  accessed August 9, 2026.
+
+\bibitem[ADV{\etalchar{+}}25]{MoreAsymmetry}
+Josh Alman, Ran Duan, Virginia {Vassilevska Williams}, Yinzhan Xu, Zixuan Xu,
+  and Renfei Zhou.
+\newblock More asymmetry yields faster matrix multiplication.
+\newblock In {\em Proceedings of the 2025 Annual ACM-SIAM Symposium on Discrete
+  Algorithms (SODA)}, pages 2005--2039. Society for Industrial and Applied
+  Mathematics, 2025.
+
+\bibitem[AV24]{AlmanWilliams2024}
+Josh Alman and Virginia {Vassilevska Williams}.
+\newblock A refined laser method and faster matrix multiplication.
+\newblock {\em TheoretiCS}, 3(21):1--32, 2024.
+
+\bibitem[CW90]{CoppersmithWinograd1990}
+Don Coppersmith and Shmuel Winograd.
+\newblock Matrix multiplication via arithmetic progressions.
+\newblock {\em Journal of Symbolic Computation}, 9(3):251--280, 1990.
+
+\bibitem[DWZ23]{DuanWuZhou2023}
+Ran Duan, Hongxun Wu, and Renfei Zhou.
+\newblock Faster matrix multiplication via asymmetric hashing.
+\newblock In {\em 2023 IEEE 64th Annual Symposium on Foundations of Computer
+  Science (FOCS)}, pages 2129--2138. IEEE, 2023.
+
+\bibitem[Kra88]{Kraft1988}
+Dieter Kraft.
+\newblock A software package for sequential quadratic programming.
+\newblock Technical Report DFVLR-FB 88-28, Deutsche Forschungs- und
+  Versuchsanstalt f{\"u}r Luft- und Raumfahrt, Cologne, Germany, 1988.
+
+\bibitem[Sch81]{Schonhage1981}
+Arnold Sch{\"o}nhage.
+\newblock Partial and total matrix multiplication.
+\newblock {\em SIAM Journal on Computing}, 10(3):434--455, 1981.
+
+\bibitem[Str69]{Strassen1969}
+Volker Strassen.
+\newblock Gaussian elimination is not optimal.
+\newblock {\em Numerische Mathematik}, 13:354--356, 1969.
+
+\bibitem[VGO{\etalchar{+}}20]{SciPy2020}
+Pauli Virtanen, Ralf Gommers, Travis~E. Oliphant, Matt Haberland, Tyler Reddy,
+  David Cournapeau, Evgeni Burovski, Pearu Peterson, Warren Weckesser, Jonathan
+  Bright, St{\'e}fan~J. van~der Walt, Matthew Brett, Joshua Wilson, K.~Jarrod
+  Millman, Nikolay Mayorov, Andrew R.~J. Nelson, Eric Jones, Robert Kern, Eric
+  Larson, C.~J. Carey, {\.{I}}lhan Polat, Yu~Feng, Eric~W. Moore, Jake
+  VanderPlas, Denis Laxalde, Josef Perktold, Robert Cimrman, Ian Henriksen,
+  E.~A. Quintero, Charles~R. Harris, Anne~M. Archibald, Ant{\^o}nio~H. Ribeiro,
+  Fabian Pedregosa, and Paul van Mulbregt.
+\newblock Scipy 1.0: Fundamental algorithms for scientific computing in python.
+\newblock {\em Nature Methods}, 17:261--272, 2020.
+
+\bibitem[VXXZ24]{VXXZ2024}
+Virginia {Vassilevska Williams}, Yinzhan Xu, Zixuan Xu, and Renfei Zhou.
+\newblock New bounds for matrix multiplication: From alpha to omega.
+\newblock In {\em Proceedings of the 2024 Annual ACM-SIAM Symposium on Discrete
+  Algorithms (SODA)}, pages 3792--3835. Society for Industrial and Applied
+  Mathematics, 2024.
+
+\end{thebibliography}

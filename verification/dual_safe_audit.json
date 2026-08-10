@@ -1,0 +1,12 @@
+{
+  "certificate": "work/cw8_optimizer/W1.00_2.371310_safe_final.mat",
+  "dual_formula": "sum_s exp((A^T lambda)_s-1) - <lambda,mu>",
+  "dual_safe_log_margin_at_stored_omega": 1.7464341972583952e-08,
+  "dual_safe_tightened_omega": 2.3713098963360215,
+  "entropy_problem_count": 762,
+  "margin_below_2.371310": 1.0366397829031371e-07,
+  "maximum_dual_minus_stored_primal_entropy": 2.0280288559604287e-10,
+  "minimum_dual_minus_stored_primal_entropy": -1.6789680756801317e-11,
+  "ordinary_tightened_omega": 2.3713098963342496,
+  "stored_safe_omega": 2.3713099046652784
+}

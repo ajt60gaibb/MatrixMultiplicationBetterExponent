@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this manuscript or certificate, please cite the paper."
+title: "A Sharper Numerical Certificate for the Matrix Multiplication Exponent"
+type: article
+authors:
+  - family-names: Townsend
+    given-names: Alex
+    affiliation: Cornell University
+date-released: 2026-08-09
+abstract: >-
+  A computer-assisted world-record candidate establishing the numerical certificate
+  omega < 2.371310 through exact epigraph rebalancing of the More Asymmetry fourth-power program.
+keywords:
+  - matrix multiplication exponent
+  - Coppersmith-Winograd tensor
+  - laser method
+  - computer-assisted proof
