@@ -1,4 +1,9 @@
-# Final stage-4 epigraph fourth-/eighth-power certificate audit
+# Historical row-only stage-4 audit (superseded)
+
+> This document records the earlier `omega < 2.371310` row-only certificate.
+> It is retained for provenance and is superseded by
+> `docs/FINAL_STAGE4_AUDIT.md`, the joint global/local certificate, and the
+> public statement `omega < 2.371301`.
 
 ## Certified exponent
 

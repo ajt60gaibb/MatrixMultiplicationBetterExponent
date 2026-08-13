@@ -37,7 +37,7 @@
 \author{Alex Townsend}
 \address{Department of Mathematics, Cornell University, Ithaca, NY 14853, USA}
 \email{townsend@cornell.edu}
-\date{August 9, 2026}
+\date{August 13, 2026}
 
 \subjclass[2020]{68Q17, 15A69, 68W40}
 \keywords{matrix multiplication exponent, Coppersmith--Winograd tensor, laser method, computer-assisted proof, constrained optimisation}
@@ -47,21 +47,22 @@
 \begin{abstract}
 We report a new computer-assisted world-record candidate for the exponent of square matrix multiplication,
 \[
-  \omega < 2.371310.
+  \omega < 2.371301.
 \]
 The previous best published bound was $\omega<2.371339$, obtained from the fourth power of the
 Coppersmith--Winograd tensor by the \emph{More Asymmetry} analysis of Alman, Duan,
 Vassilevska Williams, Xu, Xu, and Zhou.  We do not change their combinatorial degeneration.
-Instead, we re-optimise 126 term-specific six-region probability vectors that are already independent
-variables in their constituent-stage theorem.  Replacing every nonsmooth minimum by an exact epigraph
-gives 42 explicit candidate inequalities and exposes a better balanced feasible point.  A fresh evaluation
-gives the tightened exponent $2.3713098963342496$; a conservative maximum-entropy dual audit gives
-$2.3713098963360215$.  We supply a standalone certificate with stored exponent
-$2.3713099046652784$, inward inequality slack, an independent NumPy verifier, and a second
-term-by-term reconstruction.  Finally, tensoring the fourth-power degeneration with itself gives an exact
-eighth-power realisation with exponent $2.3713098963357147$.  The complete certificate and audit trail
-are included as ancillary files.  The analytic reduction is exact; the supplied validation is a
-reproducible, dual-safe binary64 computation rather than an outward-rounded interval proof.
+Instead, we jointly re-optimise the six global 45-cell shape distributions and 126 term-specific
+six-region probability vectors that are already independent variables in their theorem.  Replacing every
+nonsmooth minimum by an exact epigraph gives 42 explicit candidate inequalities and exposes a better
+balanced feasible point.  We supply a standalone certificate with inward inequality slack, refreshed
+primal and dual witnesses for all 762 maximum-entropy problems, an independent NumPy verifier, and a
+second term-by-term reconstruction.  The tightened and conservative dual-safe evaluations are
+$2.3713007071793480$ and $2.3713007071793486$, respectively, while the slack certificate stores
+$2.3713007080124780$.  Finally, tensoring the fourth-power degeneration with itself gives
+an exact eighth-power realisation.  The complete certificate and audit trail are included as ancillary
+files.  The analytic reduction is exact; the supplied validation is a reproducible, dual-safe binary64
+computation rather than an outward-rounded interval proof.
 \end{abstract}
 
 \maketitle
@@ -94,12 +95,12 @@ Coppersmith--Winograd tensor~\cite{CoppersmithWinograd1990}.  The most recent st
     Alman et al.~\cite{MoreAsymmetry}
       & six-region More Asymmetry analysis & $2.371339$ \\
     This paper
-      & exact epigraph rebalancing and certification & $2.371310$ \\
+      & joint global--local epigraph rebalancing & $2.371301$ \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
-As of August 9, 2026, the best published bound, $\omega<2.371339$, follows from the \emph{More Asymmetry}
+As of August 13, 2026, the best published bound, $\omega<2.371339$, follows from the \emph{More Asymmetry}
 framework~\cite{MoreAsymmetry}.  That work analyses $\CW_5^{\otimes4}$ and introduces six possible
 permutations of the roles of the $X$, $Y$, and $Z$ variables.  At every interior constituent term, the
 theorem permits an independent probability vector describing how much of that term is assigned to each
@@ -107,28 +108,28 @@ of the six regions.  The released implementation registers these vectors indepen
 optimisation is large, nonsmooth, and numerically delicate.  The authors report that a typical solve takes
 about a week and that the full eighth-power programme was infeasible with their solver.
 
-Our contribution is deliberately narrow but consequential: we freeze the published global distributions,
-conditional split laws, complete split distributions, and maximum-entropy witnesses, and re-optimise only
-the 126 exposed constituent-stage region vectors.  This is enough to improve the exact stored record point
-from $2.3713389005434182$ to the safe value $2.3713099046652784$.  The rounded improvement is
-approximately $2.90\times10^{-5}$.
+Our contribution is deliberately narrow but consequential.  We retain the published global region masses,
+conditional split laws, and local complete-split policies, while jointly re-optimising the six exposed
+global shape distributions and the 126 exposed constituent-stage region vectors.  Every changed
+structural quantity is an independent simplex already present in the theorem.  Maximum-entropy witnesses
+and certificate auxiliaries are then rebuilt as dependent data rather than treated as search variables.
 
 The main result is as follows.
 
 \begin{theorem}[Record-candidate bound]\label{thm:main}
   The square matrix multiplication exponent satisfies
   \[
-     \omega<2.371310.
+     \omega<2.371301.
   \]
 \end{theorem}
 
 Three features of the computation are worth separating.
 
 \begin{enumerate}[leftmargin=2.2em]
-  \item \emph{The structural theorem is unchanged.}  Every modified quantity is a six-entry simplex
-  variable explicitly allowed by the constituent-stage theorem of~\cite{MoreAsymmetry}.
+  \item \emph{The structural theorem is unchanged.}  Every optimised quantity is a distribution
+  explicitly allowed by the global- or constituent-stage theorem of~\cite{MoreAsymmetry}.
   \item \emph{The discovery solve is not the certificate.}  We use an exact epigraph formulation to find
-  the row point, then discard its auxiliary variables and reconstruct every retained-copy and matrix-size
+  a structural point, then discard its auxiliary variables and reconstruct every retained-copy and matrix-size
   quantity in a fresh model with explicit inward slack.
   \item \emph{The eighth-power statement is exact.}  Tensoring the certified fourth-power degeneration
   with itself gives a degeneration of $\CW_5^{\otimes8}$ with the same exponent.  No conjectural
@@ -177,8 +178,16 @@ logarithmic retained-copy contribution, and $\mathcal M$ is the logarithm of the
 square matrix multiplication tensor.  Any feasible parameter point satisfying \cref{eq:master} implies
 $\omega\le\tau$.
 
-For the square problem, the six global regions have equal mass $1/6$.  At every interior constituent term
-$t$, however, Theorem 6.4 permits its own vector
+For the square problem, the six global regions have equal mass $1/6$.  Proposition 5.1 and Theorem 5.3
+of~\cite{MoreAsymmetry} nevertheless assign to every region $r$ its own distribution
+\begin{equation}\label{eq:global-simplex}
+  \alpha^{(r)}=\{\alpha^{(r)}_{i,j,k}:i+j+k=8\},
+  \qquad \alpha^{(r)}_{i,j,k}\ge0,
+  \qquad \sum_{i+j+k=8}\alpha^{(r)}_{i,j,k}=1.
+\end{equation}
+Thus there are six independent 45-cell global shape distributions; equal region masses do not impose a
+permutation equality among them.  At every interior constituent term $t$, Theorem 6.4 also permits its own
+vector
 \begin{equation}\label{eq:simplex}
   \rho_t=(\rho_{t,1},\ldots,\rho_{t,6})\in\DeltaSix,
   \qquad
@@ -187,46 +196,50 @@ $t$, however, Theorem 6.4 permits its own vector
   \sum_{r=1}^{6}\rho_{t,r}=1.
 \end{equation}
 The six entries select the six permutations of the roles of $X,Y,Z$.  The released fourth-power model
-contains 126 interior terms with such vectors.  Their conditional split distributions remain fixed in this
-paper; only the proportions in \cref{eq:simplex} vary.
+contains 126 interior terms with such vectors.  Their conditional split distributions and complete-split
+policies remain fixed in this paper; the structural search varies only \cref{eq:global-simplex,eq:simplex}.
 
 For later use, expose the three coordinate candidates before each minimum:
 \begin{itemize}[leftmargin=2em]
-  \item $L^{(3)}_{r,d}(\rho)$, for the six level-three region retentions;
-  \item $L^{(2)}_d(\rho)$, for the symmetric level-two retention;
-  \item $G_{r,d}(\rho)$, for the six global-stage retentions; and
-  \item $M_d(\rho)$, for the three output matrix-size candidates,
+  \item $L^{(3)}_{r,d}(\alpha,\rho)$, for the six level-three region retentions;
+  \item $L^{(2)}_d(\alpha,\rho)$, for the symmetric level-two retention;
+  \item $G_{r,d}(\alpha,\rho)$, for the six global-stage retentions; and
+  \item $M_d(\alpha,\rho)$, for the three output matrix-size candidates,
 \end{itemize}
 where $r\in[6]$ and $d\in\{X,Y,Z\}$.  These are exactly the unminimised arrays computed by the released
 verification model.  The total retained and matrix-size quantities are
 \begin{align}
- \mathcal R(\rho)
-  &=\sum_{r=1}^{6}\min_d L^{(3)}_{r,d}(\rho)
-    +\min_d L^{(2)}_d(\rho)
-    +\sum_{r=1}^{6}\min_d G_{r,d}(\rho),\label{eq:retained}\\
- \mathcal M(\rho)&=\min_d M_d(\rho).\label{eq:matrix}
+ \mathcal R(\alpha,\rho)
+  &=\sum_{r=1}^{6}\min_d L^{(3)}_{r,d}(\alpha,\rho)
+    +\min_d L^{(2)}_d(\alpha,\rho)
+    +\sum_{r=1}^{6}\min_d G_{r,d}(\alpha,\rho),\label{eq:retained}\\
+ \mathcal M(\alpha,\rho)&=\min_d M_d(\alpha,\rho).\label{eq:matrix}
 \end{align}
-Thus the exponent certified by a structural row point is
+Thus the exponent certified by a structural joint point is
 \begin{equation}\label{eq:omega-ratio}
-  \Omega(\rho)=\frac{4\log 7-\mathcal R(\rho)}{\mathcal M(\rho)}.
+  \Omega(\alpha,\rho)=\frac{4\log 7-\mathcal R(\alpha,\rho)}
+  {\mathcal M(\alpha,\rho)}.
 \end{equation}
 
 \begin{lemma}[Legality of the optimisation axis]\label{lem:legal}
-Fix every parameter in the published $\CW_5^{\otimes4}$ certificate except the 126 vectors
-$\{\rho_t\}$.  If each $\rho_t$ satisfies \cref{eq:simplex}, and if all mixed complete split distributions,
-compatibility terms, minima, and dependent auxiliary variables are recomputed, then the resulting point is
-admissible in Theorems 5.3, 6.2, and 6.4 of~\cite{MoreAsymmetry}.
+Fix every structural parameter in the published $\CW_5^{\otimes4}$ certificate except the six laws
+$\{\alpha^{(r)}\}$ and the 126 vectors $\{\rho_t\}$.  If they satisfy
+\cref{eq:global-simplex,eq:simplex}, and if every mixed complete-split distribution, compatibility term,
+maximum-entropy witness, minimum, and dependent auxiliary variable is recomputed, then the resulting
+point is admissible in Theorems 5.3, 6.2, and 6.4 of~\cite{MoreAsymmetry}.
 \end{lemma}
 
 \begin{proof}
-For every interior constituent term $t$, Theorem 6.4 assigns independent nonnegative quantities
+Proposition 5.1 assigns an independent distribution $\alpha^{(r)}$ to every $r\in[6]$ and constrains
+only the separate region masses to sum to one.  Hence changing the six global laws within their simplexes
+is a legal axis.  For every interior constituent term $t$, Theorem 6.4 assigns independent nonnegative quantities
 $A_{t,r}$ with $\sum_r A_{t,r}=1$.  These are precisely the entries stored as the term's local region
 proportions.  Changing $A_{t,r}$ repartitions occurrences of the already revealed parent term among the
-six hashing orientations.  It does not change the parent identifier, a conditional split law, or a
-maximum-entropy feasible set.  For fixed lower policies, the level-three, level-two, and matrix-size
-contributions are affine in the region weights.  The positional complete split distribution is affine before
-the global entropy and compatibility functionals are evaluated.  Recomputing those nonlinear functionals
-and all subsequent minima therefore evaluates the same theorem at a different admissible point.
+six hashing orientations without changing a parent identifier or conditional split law.  For fixed lower
+policies, the level-three, level-two, and matrix-size contributions are affine before the entropy and
+compatibility functionals are evaluated.  Recomputing those nonlinear functionals, the six global
+maximum-entropy problems, and all subsequent minima therefore evaluates the same theorem at a different
+admissible point.
 \end{proof}
 
 This lemma is the conceptual reason the improvement does not require a new laser-method argument.
@@ -244,19 +257,21 @@ were active.  We therefore introduced 14 epigraph variables
 \]
 and imposed the 42 inequalities
 \begin{align}
- e^{(3)}_r&\le L^{(3)}_{r,d}(\rho), &&r\in[6],\ d\in\{X,Y,Z\},\label{eq:epi3}\\
- e^{(2)}&\le L^{(2)}_d(\rho), &&d\in\{X,Y,Z\},\label{eq:epi2}\\
- g_r&\le G_{r,d}(\rho), &&r\in[6],\ d\in\{X,Y,Z\},\label{eq:epig}\\
- m&\le M_d(\rho), &&d\in\{X,Y,Z\}.\label{eq:epim}
+ e^{(3)}_r&\le L^{(3)}_{r,d}(\alpha,\rho), &&r\in[6],\ d\in\{X,Y,Z\},\label{eq:epi3}\\
+ e^{(2)}&\le L^{(2)}_d(\alpha,\rho), &&d\in\{X,Y,Z\},\label{eq:epi2}\\
+ g_r&\le G_{r,d}(\alpha,\rho), &&r\in[6],\ d\in\{X,Y,Z\},\label{eq:epig}\\
+ m&\le M_d(\alpha,\rho), &&d\in\{X,Y,Z\}.\label{eq:epim}
 \end{align}
 At any optimum the appropriate inequalities are tight, and \cref{eq:omega-ratio} becomes
 \begin{equation}\label{eq:epi-objective}
-  \min_{\rho,e,g,m}
+  \min_{\alpha,\rho,e,g,m}
   \frac{4\log 7-\sum_{r=1}^{6}e^{(3)}_r-e^{(2)}-\sum_{r=1}^{6}g_r}{m}
 \end{equation}
-subject to \cref{eq:simplex,eq:epi3,eq:epi2,eq:epig,eq:epim}.  The formulation has 756 region entries
-and 14 epigraph variables.  We parameterised each supported simplex by a masked softmax and supplied
-analytic derivatives of every objective and constraint.
+subject to \cref{eq:global-simplex,eq:simplex,eq:epi3,eq:epi2,eq:epig,eq:epim}.  The structural point
+contains 270 global probabilities and 756 local-region entries, together with 14 epigraph variables.
+We parameterised each supported simplex by a softmax (masked where the source support is zero) and
+supplied analytic derivatives of every objective and constraint, including the envelope derivative of
+each global maximum-entropy value.
 
 The optimisation remains nonconvex: in particular, the global complete-split entropy depends nonlinearly
 on the mixed region rows.  Global optimality is neither claimed nor needed.  Any point returned by the
@@ -264,39 +279,47 @@ search is evaluated independently, and a single feasible improvement suffices.
 
 \subsection{Search and reconstruction}
 
-Starting from the published certificate, we first used smooth continuation to approach the active-set
-intersection.  We then solved \cref{eq:epi-objective} by sequential quadratic programming, using the SLSQP
-implementation in SciPy~\cite{Kraft1988,SciPy2020}.  The final scaled active-set stage converged in two iterations;
-the minimum epigraph residual was zero at displayed precision, and the epigraph and direct objectives
-agreed to $3\times10^{-15}$.
+Starting from the published certificate, we first optimised the local rows, then released the global laws
+and alternated the two blocks.  Finally we solved the simultaneous programme in
+\cref{eq:epi-objective} by sequential quadratic programming, using the SLSQP implementation in
+SciPy~\cite{Kraft1988,SciPy2020}.  Repeated restarts continued to improve until the chosen computation
+budget was exhausted.  We do not infer stationarity or global optimality from the solver's termination.
+During the solve we retain the best exact direct structural value seen, even when a trial point's epigraph
+auxiliaries are temporarily infeasible; the probability simplexes remain feasible and all minima are then
+recomputed directly.
 
-The solver's auxiliary variables are not trusted as a certificate.  We retain only the 126 row vectors,
-install them into a fresh copy of the released model, recompute every complete split distribution and
-unminimised candidate, take the exact coordinate minima, and rebuild the retained-copy, matrix-size, and
-exponent variables with inward slack.  The numerical progression is summarised in
+The solver's auxiliary variables are not trusted as a certificate.  We retain only the six global laws and
+126 row vectors, install them into a fresh copy of the released model, recompute every complete-split
+mixture and unminimised candidate, take the exact coordinate minima, and rebuild the retained-copy,
+matrix-size, and exponent variables with inward slack.  At serialization time we also normalise inherited
+simplexes whose sums differ from one only by binary64 roundoff and reconstruct the primal and dual
+witnesses for all 762 maximum-entropy problems.  The numerical progression is summarised in
 \cref{tab:values}.
 
 \begin{table}[t]
   \centering
-  \caption{Exponent values associated with the final structural row point.}
+  \caption{Exponent values associated with the final joint structural point.}
   \label{tab:values}
   \begin{tabular}{@{}lr@{}}
     \toprule
     Quantity & Value \\
     \midrule
     Previous stored certificate & $2.3713389005434182$ \\
-    Direct epigraph-row evaluation & $2.371309896335721$ \\
-    Fresh verifier, exact coordinate minima & $2.3713098963342496$ \\
-    Maximum-entropy dual-safe evaluation & $2.3713098963360215$ \\
-    Stored certificate with safety slack & $2.3713099046652784$ \\
-    Conservative public statement & $2.371310$ \\
+    Direct joint-epigraph evaluation & $2.3713007071793446$ \\
+    Fresh verifier, exact coordinate minima & $2.3713007071793480$ \\
+    Maximum-entropy dual-safe evaluation & $2.3713007071793486$ \\
+    Stored certificate with safety slack & $2.3713007080124780$ \\
+    Conservative public statement & $2.371301$ \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-The change audit finds 543 modified scalar entries among the 24,855 parameters: 528 coordinates in the
-126 legal region rows and 15 reconstructed auxiliary coordinates.  No global distribution, split law,
-complete split distribution, or entropy witness is changed.
+The structural changes comprise 528 stored coordinates in the 126 legal local-region simplexes and all
+270 coordinates in the six legal global distributions.  The certificate diff is intentionally larger:
+dependent maximum-entropy distributions and KKT multipliers are regenerated, 14 auxiliaries and the
+stored exponent are rebuilt, and inherited conditional and boundary simplexes are normalised by at most
+$3.74\times10^{-13}$.  The exact audit finds 6,011 changed parameter groups and 21,377 changed stored
+coordinates, all in these declared categories; there are no unexpected groups and no support changes.
 
 \section{Certification}
 
@@ -330,18 +353,21 @@ Taking the supremum over all entries of $p$ gives \cref{eq:entropy-dual}; weak d
 proof.
 \end{proof}
 
-For every one of the 762 maximum-entropy subproblems, we evaluate $D$ at the stored multipliers and
-replace the primal entropy by this upper bound.  This can only increase $P_\alpha$, decrease the relevant
-retention candidate, and hence increase the inferred exponent.  The resulting conservative value is
+For every one of the 762 maximum-entropy subproblems, we evaluate $D$ at the stored multipliers.  To
+protect the binary64 evaluation from roundoff-sized negative dual gaps or penalties, the implementation
+uses the maximum of $D$, the stored maximum-entropy primal value, and $\Hent(\alpha)$.  This can only
+increase $P_\alpha$, decrease the relevant retention candidate, and hence increase the inferred exponent.
+The largest clamp adjustment is $8.89\times10^{-16}$ and has no displayed effect on the resulting
+conservative value
 \[
-  \omega_{\rm dual}=2.3713098963360215,
+  \omega_{\rm dual}=2.3713007071793486,
 \]
-which remains $1.0366\times10^{-7}$ below the stated decimal bound.  The approximate KKT residuals are
+which remains $2.9282\times10^{-7}$ below the stated decimal bound.  The approximate KKT residuals are
 therefore diagnostics, not proof assumptions.  The dual-safe logarithmic rates are
 \[
-  \mathcal M=2.0967467985574295,
+  \mathcal M=2.0966679035330870,
   \qquad
-  \mathcal R_{\rm dual}=2.8116041626911494,
+  \mathcal R_{\rm dual}=2.8118105138530020,
 \]
 so that $\omega_{\rm dual}=(4\log 7-\mathcal R_{\rm dual})/\mathcal M$.
 
@@ -355,9 +381,10 @@ We performed three complementary checks.
   \item A second dense checker explicitly drives every term's initialisation, downward mass propagation,
   and upward contribution propagation, then independently sums every unminimised level-three,
   level-two, global, and matrix candidate.  It does not call the aggregate objective routine.
-  \item A complete parameter-difference audit compares the new MAT file with the published source
-  certificate group by group and confirms that every structural change lies in one of the 126 permitted
-  region simplexes.
+  \item A complete parameter-difference audit compares the new MAT file with the preceding released
+  certificate group by group and confirms that every structural change lies in one of the six permitted
+  global or 126 permitted local-region simplexes; every other change is a declared witness,
+  canonicalisation, or auxiliary rebuild.
 \end{enumerate}
 
 \begin{table}[t]
@@ -370,13 +397,15 @@ We performed three complementary checks.
     Check & Result \\
     \midrule
     Parameters reconstructed & $24{,}855$ \\
-    Maximum inequality residual & $-9.9999997\times10^{-10}$ \\
-    Sch\"onhage inequality residual & $-2.0967486\times10^{-9}$ \\
+    Maximum inequality residual & $-9.9999990\times10^{-11}$ \\
+    Sch\"onhage inequality residual & $-2.0966695\times10^{-10}$ \\
     Maximum bound violation & $0$ \\
-    Maximum optimised-row simplex residual & $2.22\times10^{-16}$ \\
-    Maximum structural simplex residual inherited from source & $8.15\times10^{-13}$ \\
-    Maximum component discrepancy between independent evaluators & $3.31\times10^{-12}$ \\
-    Difference between fourth- and eighth-power evaluations & $1.47\times10^{-12}$ \\
+    Maximum equality residual & $4.67\times10^{-15}$ \\
+    Maximum optimised-simplex residual & $2.22\times10^{-16}$ \\
+    Maximum serialization normalisation adjustment & $3.74\times10^{-13}$ \\
+    Maximum entropy-witness residual & $1.47\times10^{-14}$ \\
+    Independent dense-objective discrepancy & $4.00\times10^{-15}$ \\
+    Difference between fourth- and eighth-power evaluations & $0$ (binary64) \\
     Unexpected changed parameter groups & $0$ \\
     \bottomrule
   \end{tabular}
@@ -385,23 +414,24 @@ We performed three complementary checks.
 The safe certificate has SHA-256 digest
 \begin{center}
 \small\ttfamily
-65d78064ef3686f850558b3881446403afe9d4910d2d2e046c3dab92c390ff83.
+7d68936e6aab7fe4a76073e0036ee06cd8253dcd8d3ab9a0d5689362fdec98f3.
 \end{center}
 At its stored exponent, the two sides of the certificate inequality are
 \[
-  7.783640598318 \quad\text{and}\quad 4\log 7=7.783640596221,
+  7.783640597968 \quad\text{and}\quad 4\log 7=7.783640596221,
 \]
 respectively.  The dual-safe reconstruction has logarithmic margin
-$1.7464\times10^{-8}$ at the stored exponent.
+$1.7468\times10^{-9}$ at the stored exponent.
 
 \begin{proof}[Proof of \cref{thm:main}]
-By \cref{lem:legal}, the 126 optimised row vectors are admissible parameters in the degeneration theorems
-of~\cite{MoreAsymmetry}.  The fresh reconstruction evaluates all dependent complete-split and
-compatibility quantities.  By \cref{lem:entropy-dual}, the dual entropy audit bounds every
+By \cref{lem:legal}, the six optimised global distributions and 126 optimised local-region vectors are
+admissible parameters in the degeneration theorems of~\cite{MoreAsymmetry}.  The fresh reconstruction
+evaluates all dependent complete-split, entropy-witness, and compatibility quantities.  By
+\cref{lem:entropy-dual}, the dual entropy audit bounds every
 maximum-entropy penalty in the conservative direction and yields
-$\Omega(\rho)\le2.3713098963360215<2.371310$.  Substitution into
+$\Omega(\alpha,\rho)\le2.3713007071793486<2.371301$.  Substitution into
 \cref{eq:master} and Sch\"onhage's asymptotic sum inequality therefore imply
-$\omega<2.371310$.
+$\omega<2.371301$.
 \end{proof}
 
 \begin{remark}[Floating-point status]\label{rem:floating}
@@ -415,7 +445,7 @@ candidate rather than an independently established published record.
 
 \section{The exact eighth-power lift}
 
-The new row point is found in the fourth-power programme, but the requested eighth-power realisation is
+The new joint point is found in the fourth-power programme, but the requested eighth-power realisation is
 exact and immediate.
 
 \begin{proposition}[Tensor-square lift]\label{prop:square}
@@ -437,12 +467,12 @@ $8\log7$.  The sufficient inequality is therefore precisely the square of the fo
 As an independent numerical check, we also evaluated the product construction in the 36 ordered pairs of
 the six hashing orientations.  The result is
 \[
-  \omega^{(8)}_{\rm product}=2.3713098963357147,
+  \omega^{(8)}_{\rm product}=2.3713007071793486,
 \]
-only $1.47\times10^{-12}$ above the fresh fourth-power reconstruction.  The maximum row and column
-marginal residual is $3.63\times10^{-14}$.  An aggregate 36-cell evaluator gives
-$2.3713098963357138$.  These computations are not needed for \cref{prop:square}, but they check the
-eighth-power bookkeeping independently.
+equal to the fresh fourth-power reconstruction at binary64 precision.  The maximum row and column
+marginal residual is $2.78\times10^{-17}$, and the explicitly paired global retention differs from twice
+the factor retention by only $4.45\times10^{-16}$.  These computations are not needed for
+\cref{prop:square}, but they check the eighth-power bookkeeping independently.
 
 We additionally searched fixed-marginal orientation couplings and counterpart-specialised policies for the
 80 highest-mass refined parents.  After rebasing on the final epigraph point, none improved the tensor
@@ -451,15 +481,16 @@ by the eighth power, not a claimed new correlated eighth-power construction.
 
 \section{Discussion}
 
-The improvement is numerically small but structurally informative.  The published programme already
-contained the necessary freedom; what remained was a difficult nonsmooth balancing problem.  The
+The improvement is numerically small but structurally informative.  Relative to the source record point,
+the stored exponent decreases by $3.82\times10^{-5}$.  The published programme already contained the
+necessary freedom; what remained was a difficult nonsmooth balancing problem.  The
 coordinate minima in \cref{eq:retained,eq:matrix} create narrow active-set intersections, so a smooth
 surrogate or a generic large-scale SQP solve can stop near, but not at, the balance that controls the true
 objective.  The explicit 42-inequality epigraph made those branches visible and allowed a targeted final
 solve.
 
 There are two immediate directions for further work.  First, one can repeat the active-set strategy while
-releasing additional split distributions, rather than only the region weights.  Second, the full
+releasing additional conditional split distributions and local complete-split policies.  Second, the full
 $\CW_5^{\otimes8}$ programme permits non-product choices not represented by the exact tensor square.
 Our exploratory searches found no gain on several natural restricted families, but they cover only a small
 part of the full eighth-power feasible set.  A sparse reverse-mode implementation of the full programme,
@@ -494,12 +525,13 @@ The principal files in the ancillary archive are listed in \cref{tab:ancillary}.
 \toprule
 File & Purpose \\
 \midrule
-\path{W1.00_2.371310_safe_final.mat} & Standalone 24,855-parameter safe certificate. \\
-\path{p4_region_epigraph_stage4.npz} & The 126 optimised region rows and epigraph data. \\
+\path{W1.00_2.371301_safe_final.mat} & Standalone 24,855-parameter safe certificate. \\
+\path{joint_global_region_epigraph_final.npz} & Six global laws, 126 local rows, and epigraph audit data. \\
 \path{python_verifier.py} & Independent value-only reconstruction of the released model. \\
 \path{dual_safe_verifier.py} & Entropy-dual conservative audit. \\
-\path{p4_dense_epigraph_final_independent_verification.json} & Term-by-term dense audit. \\
-\path{refined_aggregate_product_epigraph_final.json} & Explicit eighth-power product evaluation. \\
+\path{joint_candidate_audit.py} & Manual dense forward pass and complete group-diff audit. \\
+\path{joint_2.371301_final_independent_audit.json} & Machine-readable result of the independent joint audit. \\
+\path{eighth_power_product_2.371301_audit.json} & Explicit 36-cell eighth-power product evaluation. \\
 \path{SHA256SUMS} & Cryptographic digests for the archive. \\
 \bottomrule
 \end{tabular}
@@ -508,8 +540,9 @@ File & Purpose \\
 The authors' public archive contains the base implementation and published $2.371339$
 certificate~\cite{MoreAsymmetryCode}.  The principal commands are listed below.
 \begin{verbatim}
-python3 python_verifier.py W1.00_2.371310_safe_final.mat --top 20
-python3 dual_safe_verifier.py W1.00_2.371310_safe_final.mat
+python3 python_verifier.py W1.00_2.371301_safe_final.mat --top 20
+python3 dual_safe_verifier.py W1.00_2.371301_safe_final.mat \
+  --public-bound 2.371301
 \end{verbatim}
 The expected headline values are those in \cref{tab:values,tab:audit}.
 

@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-"""Conservative max-entropy-dual audit for the omega < 2.371310 certificate.
+"""Conservative maximum-entropy dual audit for a published certificate.
 
 The released verifier represents each maximum-entropy distribution by a
 primal distribution and KKT multipliers.  This audit does not assume that the
 floating-point KKT equalities are exact.  Instead, it evaluates the entropy
 dual at the stored multipliers.  Weak duality makes every resulting value an
 upper bound for the relevant maximum entropy, which is the conservative
-direction in every hash-penalty term.
+direction in every hash-penalty term.  The binary64 evaluation additionally
+takes the maximum of the dual value and the two stored primal entropies.  This
+can only weaken the claimed bound and prevents roundoff-sized negative
+penalties or dual gaps from entering the final calculation.
 """
 
 from __future__ import annotations
@@ -27,6 +30,9 @@ if not (MORE / "python_verifier.py").exists():
 sys.path.insert(0, str(MORE))
 
 from python_verifier import Model, PERMS, TermInfo, entropy, margins  # noqa: E402
+
+
+DEFAULT_PUBLIC_BOUND = 2.371301
 
 
 def term_dual_entropy(term: TermInfo, region: int) -> float:
@@ -69,12 +75,15 @@ def global_dual_entropy(model: Model, region: int) -> float:
     return value
 
 
-def evaluate(certificate: Path) -> dict:
+def evaluate(certificate: Path, public_bound: float = DEFAULT_PUBLIC_BOUND) -> dict:
+    if not math.isfinite(public_bound) or public_bound <= 0.0:
+        raise ValueError("public bound must be finite and positive")
     model = Model(5, 3, 1.0)
     model.load(certificate)
     ordinary = model.evaluate()
 
     primal_dual_differences: list[float] = []
+    conservative_adjustments: list[float] = []
     retained = 0.0
 
     for level in range(3, model.max_level + 1):
@@ -89,11 +98,19 @@ def evaluate(certificate: Path) -> dict:
                 if not isinstance(term, TermInfo):
                     continue
                 dual_entropy = term_dual_entropy(term, region)
+                stored_maximum_entropy = entropy(term.split_dist_max[region])
+                stored_distribution_entropy = entropy(term.split_dist[region])
                 primal_dual_differences.append(
-                    dual_entropy - entropy(term.split_dist_max[region])
+                    dual_entropy - stored_maximum_entropy
                 )
+                conservative_entropy = max(
+                    dual_entropy,
+                    stored_maximum_entropy,
+                    stored_distribution_entropy,
+                )
+                conservative_adjustments.append(conservative_entropy - dual_entropy)
                 penalty += (
-                    dual_entropy - entropy(term.split_dist[region])
+                    conservative_entropy - stored_distribution_entropy
                 ) * term.term_frac * term.region_prop[region]
             p_y = sum(term.p_compY[region] for term in model.terms[level])
             p_z = sum(term.p_compZ[region] for term in model.terms[level])
@@ -113,9 +130,17 @@ def evaluate(certificate: Path) -> dict:
     for region in range(6):
         dim_x, dim_y, dim_z = PERMS[region]
         dual_entropy = global_dual_entropy(model, region)
-        primal_dual_differences.append(dual_entropy - entropy(stage.dist_max[region]))
+        stored_maximum_entropy = entropy(stage.dist_max[region])
+        stored_distribution_entropy = entropy(stage.dist[region])
+        primal_dual_differences.append(dual_entropy - stored_maximum_entropy)
+        conservative_entropy = max(
+            dual_entropy,
+            stored_maximum_entropy,
+            stored_distribution_entropy,
+        )
+        conservative_adjustments.append(conservative_entropy - dual_entropy)
         penalty = (
-            dual_entropy - entropy(stage.dist[region])
+            conservative_entropy - stored_distribution_entropy
         ) * stage.region_prop[region]
         corrections = {
             dim_x: penalty,
@@ -136,10 +161,18 @@ def evaluate(certificate: Path) -> dict:
         "entropy_problem_count": len(primal_dual_differences),
         "minimum_dual_minus_stored_primal_entropy": min(primal_dual_differences),
         "maximum_dual_minus_stored_primal_entropy": max(primal_dual_differences),
+        "conservative_clamp_count": int(
+            sum(bool(adjustment > 0.0) for adjustment in conservative_adjustments)
+        ),
+        "maximum_conservative_clamp_adjustment": max(conservative_adjustments),
         "ordinary_tightened_omega": float(ordinary["tightened_omega"]),
         "dual_safe_tightened_omega": dual_safe_omega,
         "stored_safe_omega": stored_omega,
-        "margin_below_2.371310": 2.371310 - dual_safe_omega,
+        "retained_logarithmic_rate": retained,
+        "single_matrix_logarithmic_rate": single,
+        "target_logarithmic_rate": target,
+        "public_bound": public_bound,
+        "margin_below_public_bound": public_bound - dual_safe_omega,
         "dual_safe_log_margin_at_stored_omega": retained + single * stored_omega - target,
         "dual_formula": "sum_s exp((A^T lambda)_s-1) - <lambda,mu>",
     }
@@ -149,8 +182,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("certificate", type=Path)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--public-bound", type=float, default=DEFAULT_PUBLIC_BOUND)
     args = parser.parse_args()
-    result = evaluate(args.certificate)
+    result = evaluate(args.certificate, args.public_bound)
     encoded = json.dumps(result, indent=2, sort_keys=True)
     print(encoded)
     if args.output:

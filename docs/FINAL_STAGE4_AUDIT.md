@@ -1,75 +1,75 @@
-# Final audit: `CW_5^8` exponent below `2.371310`
+# Final audit: `CW_5^8` exponent below `2.371301`
 
 ## Result
 
-The final structural point in
-`work/cw8_optimizer/p4_region_epigraph_stage4.npz` has independently
-reconstructed fourth-power value
+The final joint structural point in `certificate/joint_global_region_epigraph_final.npz` has independently reconstructed fourth-power value
 
 \[
-  \omega_{\rm tight}=2.3713098963342496.
+\omega_{\rm tight}=2.3713007071793480.
 \]
 
-The safety-slack certificate
-`work/cw8_optimizer/W1.00_2.371310_safe_final.mat` stores
+The safety-slack certificate `certificate/W1.00_2.371301_safe_final.mat` stores
 
 \[
-  \omega_{\rm safe}=2.3713099046652784<2.371310.
+\omega_{\rm safe}=2.3713007080124780<2.371301.
 \]
 
-Its SHA-256 is
-`65d78064ef3686f850558b3881446403afe9d4910d2d2e046c3dab92c390ff83`.
+The certificate SHA-256 is `7d68936e6aab7fe4a76073e0036ee06cd8253dcd8d3ab9a0d5689362fdec98f3`.
 
-The exact tensor square is a valid degeneration of `CW_5^8` and has the same
-exponent.  The independent 36-cell product evaluator returns
-`2.371309896335715`, differing from the factor reconstruction by only
-`1.47e-12`.  Hence the certificate proves
+The exact tensor square is a valid degeneration of `CW_5^8` with the same exponent. No correlated eighth-power improvement is needed for
 
 \[
-  \boxed{\omega<2.371310}.
+\boxed{\omega<2.371301}.
 \]
-
-No correlated/refined-label improvement is needed for this conclusion.
 
 ## Independent numerical checks
 
-- Original verifier after tightening: `2.3713098963342496`.
-- Independent dense forward pass: `2.371309896335721`.
-- Maximum component discrepancy: `3.31e-12`.
-- Serialized row discrepancy: `0`.
-- Maximum row-simplex residual: `2.22e-16`.
-- Minimum region weight: `0`.
-- Maximum certificate inequality residual: `-9.9999997e-10`.
-- Maximum certificate equality residual: `3.31319e-11`, inherited from the
-  source maximum-entropy witness.
+- Ordinary tightened verifier: `2.3713007071793480`.
+- Conservative entropy-dual verifier: `2.3713007071793486`.
+- Independent manual dense forward pass: `2.3713007071793486`.
+- Structural NPZ claim discrepancy: `4.00e-15`.
+- Maximum certificate inequality residual: `-9.99999898e-11`.
+- Maximum certificate equality residual: `4.66294e-15`.
 - Maximum bound violation: `0`.
-- Product-lift row/column marginal residual: `3.63e-14`.
-- Final epigraph residual: exactly `0`; epigraph and direct objectives agree
-  within `3e-15`.
+- Maximum optimized row/global simplex residual: `2.22e-16`.
+- Maximum serialization normalization adjustment: `3.73e-13`.
+- Maximum entropy-witness residual: `1.47e-14`.
+- Dual-safe margin below `2.371301`: `2.92821e-7`.
+- Dual-safe logarithmic margin at the stored exponent: `1.74680e-9`.
+- Explicit 36-cell eighth-power exponent: `2.3713007071793486`.
+- Product row/column marginal residual: `2.78e-17`.
 
-The detailed machine-readable audit is
-`work/cw8_theory/p4_2.371310_final_independent_audit.json`; the product-lift
-audit is `work/cw8_theory/refined_pair_product36_p4final.json`.
+The principal machine-readable reports are `verification/W1.00_2.371301_safe_final.audit.json`, `verification/dual_safe_2.371301_audit.json`, `verification/joint_2.371301_final_independent_audit.json`, and `verification/eighth_power_product_2.371301_audit.json`.
 
-## Why the changed parameters are legal
+## Legal optimization axes
 
-The only structural changes are the six-entry `region_prop` simplex rows of
-the 126 interior order-three `TermInfo` objects.  The released program treats
-each such row as an independent probability vector: its only constraints are
-nonnegativity and sum one.  These weights repartition occurrences of an
-already revealed parent term among six local hashing orientations; they do
-not alter a conditional split law or a maximum-entropy witness.
+The structural search changes two families already registered independently by the More Asymmetry fourth-power theorem:
 
-For fixed witnesses, each level-three, level-two, and matrix candidate is
-affine in these weights.  The parent positional CSD is also affine before
-entropy is taken.  The audit therefore rebuilds the mixed positional CSDs,
-recomputes the nonlinear global compatibility candidates, takes all released
-minima, and finally rebuilds the auxiliary retain/single/omega variables with
-`1e-9` safety slack.  A parameter diff finds no structural change outside
-these 126 rows; the remaining 15 changed groups are exactly those rebuilt
-auxiliaries.  Parent identifiers remain part of the child keys, so this
-optimization introduces no hidden policy sharing or occurrence untying.
+1. six global distributions over the 45 triples `(i,j,k)` with `i+j+k=8`; and
+2. 126 local six-region distributions for interior level-three terms.
 
-The complete derivation and the independent-forward formulas are in
-`work/cw8_theory/THEORY_AUDIT.md` and
-`work/cw8_theory/p4_epigraph_independent_audit.py`.
+The six global region masses remain exactly `1/6`. No theorem requires the six global shape distributions to be equal or permutation-coupled. Local conditional split laws and complete-split policies remain fixed, and no excluded row support is activated.
+
+The final certificate refreshes dependent maximum-entropy distributions and KKT multipliers. It also normalizes inherited conditional and boundary simplexes at the `1e-13` scale to remove old serialization residuals. Those are witness/canonicalization changes, not additional optimization axes.
+
+## Reproduction
+
+```bash
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
+  python3 verification/python_verifier.py \
+  certificate/W1.00_2.371301_safe_final.mat --top 20
+
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
+  python3 verification/dual_safe_verifier.py \
+  certificate/W1.00_2.371301_safe_final.mat --public-bound 2.371301
+
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
+  python3 verification/joint_candidate_audit.py \
+  certificate/W1.00_2.371310_safe_final.mat \
+  certificate/W1.00_2.371301_safe_final.mat \
+  certificate/joint_global_region_epigraph_final.npz
+
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
+  python3 verification/eighth_power_product_audit.py \
+  certificate/W1.00_2.371301_safe_final.mat
+```

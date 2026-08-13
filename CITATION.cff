@@ -6,10 +6,10 @@ authors:
   - family-names: Townsend
     given-names: Alex
     affiliation: Cornell University
-date-released: 2026-08-09
+date-released: 2026-08-13
 abstract: >-
   A computer-assisted world-record candidate establishing the numerical certificate
-  omega < 2.371310 through exact epigraph rebalancing of the More Asymmetry fourth-power program.
+  omega < 2.371301 through joint global-local epigraph rebalancing of the More Asymmetry fourth-power program.
 keywords:
   - matrix multiplication exponent
   - Coppersmith-Winograd tensor
